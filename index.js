@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const routes = require("./routes");
 const { notFound, errorHandler } = require("./middleware/error");
-dotenv
+dotenv.config();
 const app = express();
 
 const corsOptions = {
