@@ -3,10 +3,11 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
-
+const dotenv = require("dotenv");
+const connectDB = require("./config/db");
 const routes = require("./routes");
 const { notFound, errorHandler } = require("./middleware/error");
-
+dotenv
 const app = express();
 
 const corsOptions = {
@@ -32,4 +33,25 @@ app.use("/api", routes);
 app.use(notFound);
 app.use(errorHandler);
 
-module.exports = app;
+let dbConnected = false;
+
+async function ensureDBConnection() {
+  if (!dbConnected) {
+    await connectDB();
+    dbConnected = true;
+    console.log("✅ MongoDB Connected");
+  }
+}
+
+module.exports = async (req, res) => {
+  try {
+    await ensureDBConnection();
+    return app(req, res);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
