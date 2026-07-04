@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const routes = require("./routes");
 const { notFound, errorHandler } = require("./middleware/error");
+const { connection } = require("mongoose");
 
 dotenv.config();
 const app = express();
@@ -15,6 +16,10 @@ const corsOptions = {
   origin: process.env.CLIENT_URL,
   credentials: true,
 };
+
+connectDB().then(() => {
+  console.log("✅ MongoDB Connected");
+}).catch(err => console.log(err));
 
 app.use(helmet());
 app.use(cors(corsOptions));
@@ -35,6 +40,6 @@ app.use(notFound);
 app.use(errorHandler);
 
 module.exports = app;
-module.exports.handler = ServerlessHttp(app);
+
 
 
