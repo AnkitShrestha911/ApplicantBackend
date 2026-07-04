@@ -9,13 +9,19 @@ const createToken = (user) => {
 };
 
 const setAuthCookie = (res, token) => {
-	res.cookie("token", token, {
+	const cookieOptions = {
 		httpOnly: true,
 		path: "/",
 		sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 		secure: process.env.NODE_ENV === "production",
 		maxAge: 24 * 60 * 60 * 1000,
-	});
+	};
+
+	if (process.env.NODE_ENV === "production" && process.env.COOKIE_DOMAIN) {
+		cookieOptions.domain = process.env.COOKIE_DOMAIN;
+	}
+
+	res.cookie("token", token, cookieOptions);
 };
 
 exports.login = async (req, res, next) => {
@@ -46,7 +52,6 @@ exports.login = async (req, res, next) => {
 };
 
 exports.adminLogin = async (req, res, next) => {
-	console.log("sdfsdf");
 	try {
 		const { email, password } = req.body;
 		if (!email || !password) {
@@ -144,6 +149,8 @@ exports.logout = (req, res, next) => {
 	try {
 		res.clearCookie("token", {
 			path: "/",
+			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+			secure: process.env.NODE_ENV === "production",
 		});
 		res.json({ success: true, message: "Logged out successfully" });
 	} catch (error) {
