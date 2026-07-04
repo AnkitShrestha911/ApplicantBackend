@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const routes = require("./routes");
 const { notFound, errorHandler } = require("./middleware/error");
+
 dotenv.config();
 const app = express();
 
@@ -33,25 +34,7 @@ app.use("/api", routes);
 app.use(notFound);
 app.use(errorHandler);
 
-let dbConnected = false;
+module.exports = app;
+module.exports.handler = ServerlessHttp(app);
 
-async function ensureDBConnection() {
-  if (!dbConnected) {
-    await connectDB();
-    dbConnected = true;
-    console.log("✅ MongoDB Connected");
-  }
-}
 
-module.exports = async (req, res) => {
-  try {
-    await ensureDBConnection();
-    return app(req, res);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-    });
-  }
-}
