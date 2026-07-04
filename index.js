@@ -17,8 +17,11 @@ const corsOptions = {
   credentials: true,
 };
 
+let isConnected = false;
+
 connectDB().then(() => {
   console.log("✅ MongoDB Connected");
+  isConnected = true;
 }).catch(err => console.log(err));
 
 app.use(helmet());
