@@ -30,7 +30,7 @@ const corsOptions = {
 
 let isConnected = false;
 
-if(!isconnected) {
+if(!isConnected) {
   connectDB().then(() => {
     console.log("✅ MongoDB Connected");
     isConnected = true;
