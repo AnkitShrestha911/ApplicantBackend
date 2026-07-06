@@ -30,10 +30,12 @@ const corsOptions = {
 
 let isConnected = false;
 
-connectDB().then(() => {
-  console.log("✅ MongoDB Connected");
-  isConnected = true;
-}).catch(err => console.log(err));
+if(!isconnected) {
+  connectDB().then(() => {
+    console.log("✅ MongoDB Connected");
+    isConnected = true;
+  }).catch(err => console.log(err));
+
 
 app.use(helmet());
 app.use(cors(corsOptions));
