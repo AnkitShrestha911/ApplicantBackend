@@ -35,6 +35,7 @@ if(!isconnected) {
     console.log("✅ MongoDB Connected");
     isConnected = true;
   }).catch(err => console.log(err));
+}
 
 
 app.use(helmet());
@@ -62,6 +63,3 @@ app.use(errorHandler);
 // });
 
 module.exports = app;
-
-
-
